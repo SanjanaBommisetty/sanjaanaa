@@ -1,6 +1,4 @@
-#python casestudy
-#VU22CSEN0100597
-#PASSWORD MANAGER
+
 import hashlib
 import getpass
 
