@@ -1,7 +1,4 @@
-#VishnuVardhanG
-#VU22CSEN0100597
-#CAESAR CIPHER
-#CRYPTOGRAPHY
+
 import string
 
 def caesar_encrypt(message, key):
