@@ -1,0 +1,75 @@
+import sqlite3
+
+# connect to the database
+conn = sqlite3.connect('events.db')
+
+# create a table for events
+conn.execute('''CREATE TABLE IF NOT EXISTS events
+             (id INTEGER PRIMARY KEY,
+             name TEXT,
+             date TEXT,
+             time TEXT,
+             location TEXT)''')
+
+# function to add a new event
+def add_event():
+    name = input("Enter the name of the event: ")
+    date = input("Enter the date of the event (YYYY-MM-DD): ")
+    time = input("Enter the time of the event (HH:MM AM/PM): ")
+    location = input("Enter the location of the event: ")
+    conn.execute(f"INSERT INTO events (name, date, time, location) VALUES ('{name}', '{date}', '{time}', '{location}')")
+    conn.commit()
+    print("thank you,Event added successfully")
+
+# function to delete an event
+def delete_event():
+    event_id = input("Enter the ID of the event you want to delete: ")
+    conn.execute(f"DELETE FROM events WHERE id={event_id}")
+    conn.commit()
+    print("Event deleted successfully")
+
+# function to update an event
+def update_event():
+    event_id = input("Enter the ID of the event you want to update: ")
+    print("Enter new information (leave blank to keep current value): ")
+    name = input(f"Current name: {get_event(event_id)[1]}\nNew name: ")
+    if name == "":
+        name = get_event(event_id)[1]
+    date = input(f"Current date: {get_event(event_id)[2]}\nNew date (YYYY-MM-DD): ")
+    if date == "":
+        date = get_event(event_id)[2]
+    time = input(f"Current time: {get_event(event_id)[3]}\nNew time (HH:MM AM/PM): ")
+    if time == "":
+        time = get_event(event_id)[3]
+    location = input(f"Current location: {get_event(event_id)[4]}\nNew location: ")
+    if location == "":
+        location = get_event(event_id)[4]
+    conn.execute(f"UPDATE events SET name='{name}', date='{date}', time='{time}', location='{location}' WHERE id={event_id}")
+    conn.commit()
+    print("Event updated successfully")
+
+# function to get information about a specific event
+def get_event(event_id):
+    cursor = conn.execute(f"SELECT * FROM events WHERE id={event_id}")
+    return cursor.fetchone()
+
+# main program loop
+while True:
+    print("\tEvent Management System:\n")
+    print("1. Add new event")
+    print("2. Delete event")
+    print("3. Update event")
+    print("4. Exit")
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        add_event()
+    elif choice == "2":
+        delete_event()
+    elif choice == "3":
+        update_event()
+    elif choice == "4":
+        conn.close()
+        break
+    else:
+        print("Invalid choice. Please try again.")
